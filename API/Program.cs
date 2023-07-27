@@ -1,5 +1,8 @@
-using API.Data;
-using Microsoft.EntityFrameworkCore;
+using System.Text;
+using API.LIB.EXTENSIONS;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,18 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // MY SERVICES
-builder.Services.AddDbContext<DataContext>(options => {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// ## CORS
-builder.Services.AddCors();
-
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 
 
 // ## MIDDLEWARE
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
