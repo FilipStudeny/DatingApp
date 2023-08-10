@@ -1,6 +1,7 @@
 
 
 using API.Data;
+using API.Data.REPOSITORY;
 using API.LIB.INTERFACES;
 using API.LIB.SERVICES;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,9 @@ public static class ApplicationServiceExtensions
         // ## CORS
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
         return services;
     }
 }
