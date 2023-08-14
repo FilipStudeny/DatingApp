@@ -25,7 +25,7 @@ public class AccountController : BaseApiController
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO){
 
-        var user = await dataContext.Users.SingleOrDefaultAsync(user => user.UserName == loginDTO.Username.ToLower());
+        var user = await dataContext.Users.Include(photo => photo.Photos).SingleOrDefaultAsync(user => user.UserName == loginDTO.Username.ToLower());
         if(user == null) return Unauthorized("Invalid username");
 
         using var hmac = new HMACSHA256(user.PasswordSalt);
@@ -34,7 +34,8 @@ public class AccountController : BaseApiController
         if(Enumerable.SequenceEqual(computedHash, user.PasswordHash))
             return new UserDTO{
                 Username = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
 
         return Unauthorized("Invalid password");
@@ -44,7 +45,7 @@ public class AccountController : BaseApiController
     
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(RegisterDTO registerDTO){
+    public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO){
         
         if(await UserExists(registerDTO.Username)) return BadRequest("Username is already taken");
         
@@ -59,7 +60,10 @@ public class AccountController : BaseApiController
         dataContext.Add(newUser);
         await dataContext.SaveChangesAsync();
 
-        return newUser;
+        return new UserDTO{
+            Username = newUser.UserName,
+            Token = tokenService.CreateToken(newUser)
+        };
 
     }
 

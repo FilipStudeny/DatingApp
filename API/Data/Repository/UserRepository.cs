@@ -41,6 +41,7 @@ public class UserRepository: IUserRepository{
         {
             return await _context.Users
                 .Include(p => p.Photos)
+                .IgnoreQueryFilters()
                 .SingleOrDefaultAsync(x => x.UserName == username);
         }
 

@@ -479,5 +479,5 @@ $RECYCLE.BIN/
 *.db-shm
 *.db-wal
 .vscode
-/API/appsettings.json
+API/appsettings.json
 
