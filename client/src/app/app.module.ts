@@ -5,12 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from './navbar/navbar.component'
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { MembersListComponent } from './members/members-list/members-list.component';
-import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { SharedModule } from './Modules/shared.module';
@@ -23,6 +22,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { TextInputComponent } from './forms/text-input/text-input.component';
+import { DateInputComponent } from './forms/date-input/date-input.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,8 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
         MemberCardComponent,
         MemberEditComponent,
         PhotoEditorComponent,
+        TextInputComponent,
+        DateInputComponent,
     ],
     imports: [
         BrowserModule,
@@ -46,7 +49,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
         HttpClientModule,
         FormsModule,
         BrowserAnimationsModule,
-
+        ReactiveFormsModule,
         SharedModule
 
     ],
