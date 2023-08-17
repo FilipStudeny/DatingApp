@@ -4,6 +4,7 @@ using API.LIB.INTERFACES;
 using API.DTO;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using API.LIB.HELPERS;
 
 namespace API.Data.REPOSITORY;
 
@@ -25,11 +26,20 @@ public class UserRepository: IUserRepository{
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDTO>> GetMembersAsync()
+        public async Task<PagedList<MemberDTO>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users 
-                .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var query = _context.Users.AsNoTracking().AsQueryable();
+            query = query.Where(user => user.UserName != userParams.CurrentUsername); //Do not get logedIn user
+            query = query.Where(user => user.Gender == userParams.Gender); //Filter by gender
+
+            var minDayOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDayOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
+            query = query.Where(user => user.DateOfBirth >= minDayOfBirth && user.DateOfBirth <= maxDayOfBirth);
+
+
+            return await PagedList<MemberDTO>.CreateAsync(
+                query.ProjectTo<MemberDTO>(_mapper.ConfigurationProvider).AsNoTracking(), 
+                userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<User> GetUserByIdAsync(int id)

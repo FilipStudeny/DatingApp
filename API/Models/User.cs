@@ -22,9 +22,5 @@ public class User
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
 
-        // public int GetAge()
-        // {
-        //     return DateOfBirth.CalculateAge();
-        // }
 
 }

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using API.Data;
 using API.DTO;
 using API.EXTENSIONS;
+using API.LIB.HELPERS;
 using API.LIB.INTERFACES;
 using API.Models;
 using AutoMapper;
@@ -25,10 +26,17 @@ public class UserController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers(){
-        var users = await userRepository.GetMembersAsync();
+    public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams){
+
+        var currentUser = await userRepository.GetUserByUsernameAsync(User.GetUsername());
+        userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+
+        var users = await userRepository.GetMembersAsync(userParams);
+        Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
         return Ok(users);
-    
     }
 
     [HttpGet("{username}")]
