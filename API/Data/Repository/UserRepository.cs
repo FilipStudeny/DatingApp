@@ -35,7 +35,10 @@ public class UserRepository: IUserRepository{
             var minDayOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
             var maxDayOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
             query = query.Where(user => user.DateOfBirth >= minDayOfBirth && user.DateOfBirth <= maxDayOfBirth);
-
+            query = userParams.OrderBy switch{
+                "created" => query.OrderByDescending(user => user.Created),
+                _ => query.OrderByDescending(user => user.LastActive)
+            };
 
             return await PagedList<MemberDTO>.CreateAsync(
                 query.ProjectTo<MemberDTO>(_mapper.ConfigurationProvider).AsNoTracking(), 
@@ -51,7 +54,6 @@ public class UserRepository: IUserRepository{
         {
             return await _context.Users
                 .Include(p => p.Photos)
-                .IgnoreQueryFilters()
                 .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
