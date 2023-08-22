@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230822130911_LikeEntityAdded")]
+    partial class LikeEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -92,19 +95,19 @@ namespace API.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("API.Models.UserLike", b =>
+            modelBuilder.Entity("UserUser", b =>
                 {
-                    b.Property<int>("SourceUserId")
+                    b.Property<int>("LikedByUsersId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TargetUserId")
+                    b.Property<int>("LikedUsersId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("SourceUserId", "TargetUserId");
+                    b.HasKey("LikedByUsersId", "LikedUsersId");
 
-                    b.HasIndex("TargetUserId");
+                    b.HasIndex("LikedUsersId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("UserUser");
                 });
 
             modelBuilder.Entity("API.Models.Photo", b =>
@@ -118,31 +121,23 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Models.UserLike", b =>
+            modelBuilder.Entity("UserUser", b =>
                 {
-                    b.HasOne("API.Models.User", "SourceUser")
-                        .WithMany("LikedUsers")
-                        .HasForeignKey("SourceUserId")
+                    b.HasOne("API.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("LikedByUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.User", "TargetUser")
-                        .WithMany("LikedByUsers")
-                        .HasForeignKey("TargetUserId")
+                    b.HasOne("API.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("LikedUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("SourceUser");
-
-                    b.Navigation("TargetUser");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
                 {
-                    b.Navigation("LikedByUsers");
-
-                    b.Navigation("LikedUsers");
-
                     b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
