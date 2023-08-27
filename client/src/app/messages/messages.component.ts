@@ -9,7 +9,7 @@ import { MessageService } from '../Services/message.service';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-    messages: Message[] | undefined;
+    messages?: Message[];
     pagination: IPagination | undefined;
     container = 'Unread';
     pageNumber = 1;
