@@ -12,10 +12,8 @@ using API.LIB.INTERFACES;
 public class LikesRepository: ILikesRepository{
 
     private readonly DataContext _context;
-    private readonly IMapper _mapper;
-    public LikesRepository(DataContext context, IMapper mapper)
+    public LikesRepository(DataContext context)
     {
-        _mapper = mapper;
         _context = context;
     }
 

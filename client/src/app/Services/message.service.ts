@@ -32,7 +32,6 @@ export class MessageService {
         this.hubConnection.start().catch(error => console.error(error));
         
         this.hubConnection.on('RecieveMessageThread', messages => {
-            console.log(messages);
             this.messageThreadSouce.next(messages);
         })
 
@@ -55,7 +54,6 @@ export class MessageService {
         this.hubConnection.on('NewMessage', message => {
             this.messageThread.pipe(take(1)).subscribe({
                 next: messages => {
-                    console.log(messages);
                     this.messageThreadSouce.next([...messages, message]);
                 }
             });

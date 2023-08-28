@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TimeagoModule } from 'ngx-timeago';
 import { Message } from 'src/app/Models/Message';
@@ -13,7 +13,8 @@ import { MessageService } from 'src/app/Services/message.service';
   standalone: true,
   imports: [
     CommonModule, TimeagoModule, FormsModule
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberMesssagesComponent implements OnInit {
     @Input() username?: string;
