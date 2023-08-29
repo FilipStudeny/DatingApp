@@ -22,9 +22,15 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200"));
 app.UseAuthentication();
 app.UseAuthorization();
+
+//STATIC FILES SERVING FROM WWWROOT looking for index.html
+app.UseDefaultFiles();
+app.UseStaticFiles(); //Looks for wwwroot
+
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
+app.MapFallbackToController("Index", "Fallback"); //FALLBACK CONTROLLER FOR ANGULAR ROUTING
 
 
 using var scope = app.Services.CreateScope();
